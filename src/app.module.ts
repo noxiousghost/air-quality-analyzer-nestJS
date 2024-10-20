@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { AirReportModule } from './air-report/air-report.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { join } from 'path';
         synchronize: true,
       }),
     }),
+    AirReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
