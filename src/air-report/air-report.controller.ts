@@ -49,9 +49,9 @@ export class AirReportController {
 
   @Get('aqi')
   async getAQIReport(
-    @Query('month') month: string,
     @Query('year') year: string,
     @Res() res: Response,
+    @Query('month') month?: string,
   ): Promise<Response> {
     try {
       const numericYear = parseInt(year, 10);
