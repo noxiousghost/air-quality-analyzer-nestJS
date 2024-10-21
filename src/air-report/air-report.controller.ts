@@ -35,7 +35,7 @@ export class AirReportController {
     }
   }
 
-  @Get()
+  @Get('/')
   findAll(@Res() res: Response) {
     try {
       return this.airReportService.findAll();
