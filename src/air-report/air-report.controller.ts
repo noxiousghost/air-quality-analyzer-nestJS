@@ -12,7 +12,7 @@ import { AirReportService } from './air-report.service';
 import { CreateAirReportDto } from './dto/create-air-report.dto';
 import { Response } from 'express';
 
-@Controller('report')
+@Controller('api/report')
 export class AirReportController {
   private readonly logger = new Logger(AirReportService.name);
   constructor(private readonly airReportService: AirReportService) {}
