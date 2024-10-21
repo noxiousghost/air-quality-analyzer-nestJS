@@ -78,64 +78,54 @@ export class AirReportService {
     if (!ValidValuesUtil.isValidYear(year)) {
       throw new BadRequestException('Invalid year');
     }
-
+    let airReports;
+    let normalizedMonth;
     if (month) {
       // if month is provided in the url query, then generate the monthly report
-      const normalizedMonth = ValidValuesUtil.normalizeMonth(month);
+      normalizedMonth = ValidValuesUtil.normalizeMonth(month);
       if (!normalizedMonth) {
         throw new BadRequestException('Invalid month');
       }
-
       // query to extract the AQI report for the month and year
-      const airReports = await this.airReportRepository
+      airReports = await this.airReportRepository
         .createQueryBuilder('air_report')
         .where('air_report.month = :month', { month: normalizedMonth })
         .andWhere('air_report.year = :year', { year })
         .orderBy('air_report.day', 'ASC')
         .getMany();
-      if (airReports.length === 0) {
-        throw new BadRequestException('No data found for this period.');
-      }
-      // calculating the min, max and average aqi of a particular month only
-      const totalAqi = airReports.reduce((sum, report) => sum + report.aqi, 0);
-      const avgAqi = Math.round(totalAqi / airReports.length);
-      const maxAqi = Math.max(...airReports.map((report) => report.aqi));
-      const minAqi = Math.min(...airReports.map((report) => report.aqi));
-      // generating the list of reports for the month
-      const reportList = airReports.map((report) => ({
-        date: `${report.day.toString().padStart(2, '0')}/${normalizedMonth}/${report.year}`,
-        aqi: report.aqi,
-      }));
-      return {
-        month: normalizedMonth,
-        year,
-        avg: avgAqi,
-        max: maxAqi,
-        min: minAqi,
-        list: reportList,
-      };
     } else {
       // if no month is provided in the url query, then generate the yearly report
-      const airReports = await this.airReportRepository
+      airReports = await this.airReportRepository
         .createQueryBuilder('air_report')
         .where('air_report.year = :year', { year })
         .orderBy('air_report.month', 'ASC')
         .addOrderBy('air_report.day', 'ASC')
         .getMany();
-      if (airReports.length === 0) {
-        throw new BadRequestException('No data found for this year.');
-      }
-      // calculating the min, max and average aqi of the whole year
-      const totalAqi = airReports.reduce((sum, report) => sum + report.aqi, 0);
-      const avgAqi = Math.round(totalAqi / airReports.length);
-      const maxAqi = Math.max(...airReports.map((report) => report.aqi));
-      const minAqi = Math.min(...airReports.map((report) => report.aqi));
-      return {
-        year,
-        avg: avgAqi,
-        max: maxAqi,
-        min: minAqi,
-      };
     }
+    if (airReports.length === 0) {
+      throw new BadRequestException('No data found for this period.');
+    }
+
+    const totalAqi = airReports.reduce((sum, report) => sum + report.aqi, 0);
+    const avgAqi = Math.round(totalAqi / airReports.length);
+    const maxAqi = Math.max(...airReports.map((report) => report.aqi));
+    const minAqi = Math.min(...airReports.map((report) => report.aqi));
+
+    const reportList = airReports.map((report) => ({
+      date: `${report.day.toString().padStart(2, '0')}/${normalizedMonth}/${report.year}`,
+      aqi: report.aqi,
+    }));
+    const yearlyReport = {
+      year,
+      avg: avgAqi,
+      max: maxAqi,
+      min: minAqi,
+    };
+    const monthlyReport = {
+      ...yearlyReport,
+      month: month ? ValidValuesUtil.normalizeMonth(month) : null,
+      list: reportList,
+    };
+    return month ? monthlyReport : yearlyReport;
   }
 }
