@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AirReportModule } from './air-report/air-report.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { ParseCsvModule } from './parse-csv/parse-csv.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     }),
     AirReportModule,
     FileUploadModule,
+    ParseCsvModule,
   ],
   controllers: [AppController],
   providers: [AppService],
