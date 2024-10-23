@@ -7,7 +7,7 @@ import { FileUploadService } from '../file-upload/file-upload.service';
 export class ParseCsvController {
   constructor(
     private readonly parseCsvService: ParseCsvService,
-    private readonly uploadFileService: FileUploadService, // Injecting the service to find file details
+    private readonly uploadFileService: FileUploadService,
   ) {}
 
   @Post('process/:id')
@@ -25,11 +25,11 @@ export class ParseCsvController {
           .json({ message: 'File not found' });
       }
 
-      const filePath = file.file; // Path to the uploaded CSV file
+      const filePath = file.file; // get path to the uploaded CSV file based on the id provided
       const result = await this.parseCsvService.processCsvAndSaveData(filePath);
 
       return res.status(HttpStatus.OK).json({
-        message: 'CSV file processed successfully',
+        message: 'CSV file processed with: ',
         successCount: result.success,
         errors: result.errors,
       });

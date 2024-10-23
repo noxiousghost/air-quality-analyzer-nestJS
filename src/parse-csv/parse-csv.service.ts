@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as csv from 'csv-parser';
 import { Readable } from 'stream';
@@ -16,6 +16,7 @@ interface CSVRow {
 
 @Injectable()
 export class ParseCsvService {
+  private readonly logger = new Logger(ParseCsvService.name);
   constructor(
     @InjectRepository(AirReport)
     private airReportRepository: Repository<AirReport>,
@@ -49,25 +50,23 @@ export class ParseCsvService {
         }
       }
     }
-
+    Logger.log('File content saved');
     return { success, errors };
   }
 
   private async validateAndSaveRow(row: CSVRow): Promise<void> {
     const { aqi, day, month, year } = row;
 
-    // Validate and normalize the month
     const normalizedMonth = ValidValuesUtil.normalizeMonth(month);
     if (!normalizedMonth) {
       throw new Error(`Invalid month: ${month}`);
     }
 
-    // Convert string values to numeric
+    // convert string into numeric
     const numericAqi = parseInt(aqi, 10);
     const numericDay = parseInt(day, 10);
     const numericYear = parseInt(year, 10);
 
-    // Validate the AQI, day, and year
     if (!ValidValuesUtil.isValidAqi(numericAqi)) {
       throw new BadRequestException(`Invalid AQI: ${aqi}`);
     }
@@ -84,7 +83,7 @@ export class ParseCsvService {
       throw new BadRequestException(`Invalid year: ${year}`);
     }
 
-    // Check if the record already exists in the database
+    // checking for already existing record in the database
     const existingRecord = await this.airReportRepository.findOne({
       where: { day: numericDay, month: normalizedMonth, year: numericYear },
     });
@@ -95,12 +94,13 @@ export class ParseCsvService {
       );
     }
 
-    // Create a new AirReport entity and save it to the database
+    // save the values to the database
     const airReport = this.airReportRepository.create({
       aqi: numericAqi,
       day: numericDay,
       month: normalizedMonth,
       year: numericYear,
+      savedDate: new Date(),
     });
 
     await this.airReportRepository.save(airReport);
