@@ -19,7 +19,6 @@ import { Response } from 'express';
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
-  // Upload a new file
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', multerConfig))
   async uploadFile(
@@ -33,21 +32,18 @@ export class FileUploadController {
       .json({ message: 'File Uploaded', savedFile });
   }
 
-  // Get all files
   @Get()
   async getAllFiles(@Res() res: Response) {
     const files = await this.fileUploadService.findAllFiles();
     return res.status(HttpStatus.OK).json(files);
   }
 
-  // Get a file by ID
   @Get(':id')
   async getFileById(@Param('id') id: string, @Res() res: Response) {
     const file = await this.fileUploadService.findFileById(id);
     return res.status(HttpStatus.OK).json(file);
   }
 
-  // Delete a file
   @Delete(':id')
   async deleteFile(@Param('id') id: string, @Res() res: Response) {
     await this.fileUploadService.deleteFile(id);
