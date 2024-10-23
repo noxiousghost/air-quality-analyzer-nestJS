@@ -7,7 +7,6 @@ import {
   UseInterceptors,
   UploadedFile,
   Body,
-  Query,
   Res,
   HttpStatus,
 } from '@nestjs/common';
