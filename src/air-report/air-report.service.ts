@@ -14,24 +14,20 @@ export class AirReportService {
   ) {}
   async create(airData: CreateAirReportDto): Promise<AirReport> {
     const { aqi, day, month, year, savedDate } = airData;
-    // Validate month
     const normalizedMonth = ValidValuesUtil.normalizeMonth(month);
     if (!normalizedMonth) {
       throw new BadRequestException('Invalid month');
     }
-    // Validate AQI
     if (!ValidValuesUtil.isValidAqi(aqi)) {
       throw new BadRequestException('Invalid AQI');
     }
-    // Validate day based on month and year
     if (!ValidValuesUtil.isValidDayForMonth(day, normalizedMonth, year)) {
       throw new BadRequestException('Invalid Day');
     }
-    // Validate year
     if (!ValidValuesUtil.isValidYear(year)) {
       throw new BadRequestException('Invalid Year');
     }
-    // Check if a report already exists for the given day, month, and year
+    // checking for already existing record in the database for the given day, month, and year
     const existingReport = await this.airReportRepository.findOne({
       where: {
         day,
@@ -44,7 +40,6 @@ export class AirReportService {
         'Details for that particular date already exist',
       );
     }
-    // Create the new report entity
     const airReport = this.airReportRepository.create({
       aqi,
       day,
@@ -115,12 +110,15 @@ export class AirReportService {
       date: `${report.day.toString().padStart(2, '0')}/${normalizedMonth}/${report.year}`,
       aqi: report.aqi,
     }));
+    // for yearly report contents
     const yearlyReport = {
       year,
       avg: avgAqi,
       max: maxAqi,
       min: minAqi,
     };
+
+    // monthly report contents
     const monthlyReport = {
       ...yearlyReport,
       month: month ? ValidValuesUtil.normalizeMonth(month) : null,
