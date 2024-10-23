@@ -35,10 +35,12 @@ export class AirReportController {
     }
   }
 
-  @Get('/')
-  findAll(@Res() res: Response) {
+  @Get('')
+  async findAll(@Res() res: Response) {
     try {
-      return this.airReportService.findAll();
+      const result = await this.airReportService.findAll();
+      console.log(result);
+      return res.json(result);
     } catch (error) {
       this.logger.error('Error creating report', error);
       return res
