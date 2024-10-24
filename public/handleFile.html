@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Handle Files</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Air Quality Report Application</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="createRecord.html">Create New Record</a></li>
+          <li><a href="handleFile.html">Upload CSV File</a></li>
+          <li><a href="viewReport.html">View Report</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h3>Upload CSV File</h3>
+      <form id="upload-csv-form">
+        <label for="csv-file">Select CSV File:</label>
+        <input type="file" id="csv-file" name="file" accept=".csv" required />
+        <button type="submit">Upload</button>
+      </form>
+
+      <button id="process-csv" style="display: none">Save File Contents</button>
+
+      <div style="display: none" id="result"></div>
+    </main>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="./js/handleFile.js"></script>
+  </body>
+</html>

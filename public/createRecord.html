@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Record</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Air Quality Report Application</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="createRecord.html">Create New Record</a></li>
+          <li><a href="handleFile.html">Upload CSV File</a></li>
+          <li><a href="viewReport.html">View Report</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h2>Create New Record</h2>
+      <form id="create-record-form">
+        <label for="day">Day:</label>
+        <input type="number" id="day" name="day" required min="1" max="31" />
+
+        <label for="month">Month:</label>
+        <select id="month" name="month" required>
+          <option value="jan">January</option>
+          <option value="feb">February</option>
+          <option value="mar">March</option>
+          <option value="apr">April</option>
+          <option value="may">May</option>
+          <option value="jun">June</option>
+          <option value="jul">July</option>
+          <option value="aug">August</option>
+          <option value="sep">September</option>
+          <option value="oct">October</option>
+          <option value="nov">November</option>
+          <option value="dec">December</option>
+        </select>
+
+        <label for="year">Year:</label>
+        <input
+          type="number"
+          id="year"
+          name="year"
+          required
+          min="1000"
+          max="9999"
+        />
+
+        <label for="aqi">AQI:</label>
+        <input type="number" id="aqi" name="aqi" required min="0" max="500" />
+
+        <button type="submit">Submit</button>
+      </form>
+    </main>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="./js/createRecord.js"></script>
+  </body>
+</html>
