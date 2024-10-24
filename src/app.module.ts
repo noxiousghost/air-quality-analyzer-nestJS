@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AirReportModule } from './air-report/air-report.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { ParseCsvModule } from './parse-csv/parse-csv.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -30,7 +32,5 @@ import { ParseCsvModule } from './parse-csv/parse-csv.module';
     FileUploadModule,
     ParseCsvModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
