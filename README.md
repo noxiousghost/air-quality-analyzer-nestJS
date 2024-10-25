@@ -2,6 +2,10 @@
 
 This project is the backend service for an IoT-based air quality monitoring device that measures Kathmandu's air quality on a daily basis. It allows uploading and saving air quality reports, cleaning malformed data, and generating insights on the data.
 
+`NOTE!!:`
+I created this project without any prior experience with NestJS simply to explore NestJS and SQL database. I had already done this same project using ExpressJS and Mongodb previously which is I think better than this and deployed it as well.
+For Express & Mongodb version, [click here.](https://github.com/noxiousghost/air-quality-analyzer)
+
 ## Features
 
 - Upload a CSV file and save air quality reports in the database
