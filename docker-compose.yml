@@ -1,0 +1,39 @@
+services:
+  postgresc:
+    image: 'postgres'
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 5433:5432
+    networks:
+      - app-network
+    volumes:
+      - database_volume:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${NODE_ENV}
+    depends_on:
+      - postgresc
+    environment:
+      PORT: 3002
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - app-network
+
+volumes:
+  database_volume:
+
+networks:
+  app-network:
+    driver: bridge
