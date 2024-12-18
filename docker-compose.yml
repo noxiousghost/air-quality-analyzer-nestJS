@@ -20,7 +20,7 @@ services:
     depends_on:
       - postgresc
     environment:
-      PORT: 3002
+      PORT: ${PORT}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_USERNAME: ${DB_USERNAME}
